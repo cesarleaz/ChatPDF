@@ -1,7 +1,6 @@
-import { SettingOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Input, message, Modal } from 'antd';
+import { Card, Form, Input } from 'antd';
 import axios from 'axios';
-import { FC, Fragment, useEffect, useRef, useState } from 'react';
+import { FC, Fragment, useRef, useState } from 'react';
 import Message from './Message';
 
 interface ChatWindowProps {
@@ -16,21 +15,11 @@ interface MessageItem {
 
 const ChatWindow: FC<ChatWindowProps> = ({ className }) => {
   const chatWindowRef = useRef<HTMLDivElement>(null);
-  const settings = useRef<any>(null);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-  const [showSettingModal, setShowSettingModal] = useState(false);
   const [query, setQuery] = useState('');
   const [messageList, setMessageList] = useState<MessageItem[]>([]);
 
-  useEffect(() => {
-    const localSettings = JSON.parse(localStorage.getItem('settings') as string);
-    if (!localSettings) {
-      setShowSettingModal(true);
-    } else {
-      settings.current = localSettings;
-    }
-  }, [showSettingModal]);
 
   const scrollToBottom = () => {
     setTimeout(() => {
@@ -50,7 +39,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ className }) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        data: { query: value, apiKey: settings.current?.apiKey, matches: 5 }
+        data: { query: value, matches: 5 }
       });
 
       const prompt = `
@@ -64,7 +53,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ className }) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ prompt, apiKey: settings.current?.apiKey })
+        body: JSON.stringify({ prompt })
       });
       setLoading(false);
 
@@ -107,26 +96,10 @@ const ChatWindow: FC<ChatWindowProps> = ({ className }) => {
 
   const onSearch = async (value: string) => {
     setQuery('');
-    if (!settings.current?.apiKey) {
-      message.error('please input your apiKey');
-      return;
-    }
 
     setMessageList([...messageList, { question: value.trim() }, { reply: '' }]);
     scrollToBottom();
     onReply(value);
-  };
-
-  const onSaveSettings = () => {
-    form
-      .validateFields()
-      .then(values => {
-        localStorage.setItem('settings', JSON.stringify(values));
-        setShowSettingModal(false);
-      })
-      .catch(info => {
-        console.log('Validate Failed:', info);
-      });
   };
 
   return (
@@ -143,9 +116,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ className }) => {
         }}
         title="Chat with PDF"
         bordered={false}
-        extra={
-          <Button onClick={() => setShowSettingModal(true)} icon={<SettingOutlined />}></Button>
-        }
       >
         <div
           ref={chatWindowRef}
@@ -178,28 +148,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ className }) => {
             onSearch={onSearch}
           />
         </div>
-
-        <Modal
-          title="Settings"
-          open={showSettingModal}
-          onOk={onSaveSettings}
-          onCancel={() => setShowSettingModal(false)}
-        >
-          <Form
-            form={form}
-            initialValues={{
-              apiKey: settings.current?.apiKey
-            }}
-          >
-            <Form.Item
-              label="apiKey"
-              name="apiKey"
-              rules={[{ required: true, message: 'Please input your apiKey!' }]}
-            >
-              <Input />
-            </Form.Item>
-          </Form>
-        </Modal>
       </Card>
     </>
   );

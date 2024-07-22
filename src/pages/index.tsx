@@ -87,8 +87,7 @@ const Home: NextPage = () => {
           'Content-Type': 'application/json'
         },
         data: {
-          sentenceList: chunk,
-          apiKey: JSON.parse(localStorage.getItem('settings') as string).apiKey
+          sentenceList: chunk
         }
       });
     }

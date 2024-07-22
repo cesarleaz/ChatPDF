@@ -5,10 +5,10 @@ import getOpenAIBaseUrl from '../../utils/getOpenAIBaseUrl';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const { sentenceList, apiKey } = req.body as any;
+    const { sentenceList } = req.body as any;
 
     const configuration = new Configuration({
-      apiKey,
+      apiKey: process.env.OPENAI_API_KEY,
       basePath: `${getOpenAIBaseUrl()}/v1`  || undefined
     });
     const openai = new OpenAIApi(configuration);

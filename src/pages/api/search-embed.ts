@@ -5,14 +5,14 @@ import { supabaseClient } from '../../utils/supabaseClient';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const { query, apiKey, matches } = req.body;
+    const { query,  matches } = req.body;
 
     const input = query.replace(/\n/g, ' ');
 
     const embedRes = await axios(`${getOpenAIBaseUrl()}/v1/embeddings`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
       },
       method: 'POST',
       data: {

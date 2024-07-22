@@ -1,14 +1,14 @@
 import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser';
 import getOpenAIBaseUrl from './getOpenAIBaseUrl';
 
-export const OpenAIStream = async (prompt: string, apiKey: string) => {
+export const OpenAIStream = async (prompt: string) => {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
 
   const res = await fetch(`${getOpenAIBaseUrl()}/v1/chat/completions`, {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
     },
     method: 'POST',
     body: JSON.stringify({
