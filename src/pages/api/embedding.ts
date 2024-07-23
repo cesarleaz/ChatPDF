@@ -17,6 +17,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const chunk = sentenceList[i];
       const { content, content_length, content_tokens, page_num } = chunk;
 
+      if (content.length < 1 || content_length < 1) continue
+      
       const embeddingResponse = await openai.createEmbedding({
         model: 'togethercomputer/m2-bert-80M-32k-retrieval',
         input: content
