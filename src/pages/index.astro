@@ -1,8 +1,8 @@
 ---
 import Layout from "../components/Layout.astro";
-import App from "../components/App.tsx";
+import FileUpload from "../components/FileUpload.tsx";
 ---
 
 <Layout title="Chat with PDF">
-	<App client:load />
+	<FileUpload client:only="react" />
 </Layout>

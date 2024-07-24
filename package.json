@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
+    "postinstall": "patch-package",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
@@ -14,6 +15,7 @@
     "@astrojs/check": "^0.8.2",
     "@astrojs/react": "^3.6.0",
     "@astrojs/tailwind": "^5.1.0",
+    "@aws-sdk/client-s3": "^3.617.0",
     "@supabase/supabase-js": "^2.10.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -23,11 +25,19 @@
     "classnames": "^2.3.2",
     "eventsource-parser": "^0.1.0",
     "gpt-3-encoder": "^1.1.4",
+    "lucide-react": "^0.414.0",
     "mitt": "^3.0.0",
     "openai": "^3.2.1",
+    "patch-package": "^8.0.0",
+    "pdf-parse": "^1.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-dropzone": "^14.2.3",
+    "react-hot-toast": "^2.4.1",
     "tailwindcss": "^3.4.6",
     "typescript": "^5.5.3"
+  },
+  "devDependencies": {
+    "@types/pdf-parse": "^1.1.4"
   }
 }
