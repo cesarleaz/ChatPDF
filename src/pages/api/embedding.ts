@@ -1,14 +1,14 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import { Configuration, OpenAIApi } from 'openai';
 import { supabaseClient } from '@/utils/supabaseClient';
 import getOpenAIBaseUrl from '../../utils/getOpenAIBaseUrl';
+import type { APIRoute } from 'astro';
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const POST: APIRoute = async ({ request }) => {
   try {
-    const { sentenceList } = req.body as any;
+    const { sentenceList } = (await request.formData()) as any;
 
     const configuration = new Configuration({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: import.meta.env.OPENAI_API_KEY,
       basePath: `${getOpenAIBaseUrl()}/v1`  || undefined
     });
     const openai = new OpenAIApi(configuration);
@@ -47,11 +47,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await new Promise(resolve => setTimeout(resolve, 1500));
     }
 
-    res.status(200).json('ok');
+    return new Response(JSON.stringify('ok'))
   } catch (error) {
     console.error(JSON.stringify(error));
-    res.status(500).json({ message: 'error' });
+    return new Response(JSON.stringify({ message: 'error' }), { status: 500 })
   }
 };
-
-export default handler;

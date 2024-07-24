@@ -1,12 +1,13 @@
+import type { APIRoute } from 'astro';
 import { OpenAIStream } from '../../utils/openaiStream';
 
 export const config = {
   runtime: 'edge'
 };
 
-const handler = async (req: Request): Promise<Response> => {
+export const POST: APIRoute = async ({ request }) => {
   try {
-    const { prompt } = (await req.json()) as {
+    const { prompt } = (await request.json()) as {
       prompt: string;
     };
 
@@ -18,5 +19,3 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response('Error', { status: 500 });
   }
 };
-
-export default handler;

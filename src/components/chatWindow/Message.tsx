@@ -1,17 +1,17 @@
 import { Popover } from 'antd';
 import classNames from 'classnames';
-import { FC, PropsWithChildren, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import eventEmitter from '../../utils/eventEmitter';
 import Loading from './Loading';
 
-interface MessageProps extends PropsWithChildren {
+interface MessageProps extends React.PropsWithChildren {
   isQuestion?: boolean;
   loading?: boolean;
   references?: { id: number; content: string; page_num: number }[];
   text: string;
 }
 
-const Message: FC<MessageProps> = ({ text = '', isQuestion, references = [], loading }) => {
+const Message: React.FC<MessageProps> = ({ text = '', isQuestion, references = [], loading }) => {
   const [words, setWords] = useState<string[]>([]);
 
   useEffect(() => {

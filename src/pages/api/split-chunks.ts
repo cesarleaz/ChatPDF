@@ -1,5 +1,5 @@
+import type { APIRoute } from 'astro';
 import { encode } from 'gpt-3-encoder';
-import { NextApiRequest, NextApiResponse } from 'next';
 
 function generateNewChunkList(chunkList: { sentence: string; pageNum: number }[]) {
   const combined = [];
@@ -34,16 +34,14 @@ function generateNewChunkList(chunkList: { sentence: string; pageNum: number }[]
   return combined;
 }
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const POST: APIRoute = async ({ request }) => {
   try {
-    const { sentenceList } = req.body;
+    const { sentenceList } = (await request.formData()) as any;
     const chunkList = generateNewChunkList(sentenceList);
 
-    res.status(200).json({ chunkList });
+    return new Response(JSON.stringify({ chunkList }))
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'error' });
+    return new Response(JSON.stringify({ message: 'erro '}), { status: 500 })
   }
 };
-
-export default handler;

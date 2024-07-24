@@ -1,35 +1,13 @@
-## About
+# Astro + React Example
 
-This is a fork of [ChatGPT PDF Demo](https://github.com/3Alan/chatpdf-demo/tree/391826246475a47d244a1443680551484d86371a)
+```sh
+npm create astro@latest -- --template framework-react
+```
 
-This is a simple demo of using ChatGPT to help you read and understand PDF files. In this particular example, we'll be focusing on the GitHub Privacy Statement PDF.
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/framework-react)
+[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/framework-react)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/framework-react/devcontainer.json)
 
-## Demo
+This example showcases Astro working with [React](https://react.dev).
 
-To get started with this demo, you can simply visit the [demo site](https://chatpdf-demo.alanwang.site/) and ask any question you have about the GitHub Privacy Statement PDF. The ChatGPT assistant will do its best to assist you with your query.
-
-## References
-
-You may find the following resources helpful in understanding how this demo was built:
-
-- https://github.com/mckaywrigley/paul-graham-gpt
-- https://github.com/openai/openai-cookbook/blob/main/examples/How_to_stream_completions.ipynb
-- https://github.com/ddiu8081/chatgpt-demo
-
-## Q&A
-
-### How can I run this project locally?
-
-You can read my [blog](https://www.alanwang.site/en/blog/chatgpt-pdf#how-to-run-demo-locally) tutorials
-
-### Will new features be added?
-
-This is just a Demo and I have no plans to add new features at this time
-
-If you find this project helpful, please consider giving it a star 🌟
-
-## 🎉🎉🎉
-
-My new open source project is coming. Developing using Python, React, and Vite. Check it out at 👉 [DocsMind](https://github.com/3Alan/DocsMind)
-
-![DocsMind](https://raw.githubusercontent.com/3Alan/images/master/img/20230507230412.png)
+Write your React components as `.jsx` or `.tsx` files in your project.

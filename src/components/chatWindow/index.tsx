@@ -1,6 +1,6 @@
 import { Card, Form, Input } from 'antd';
 import axios from 'axios';
-import { FC, Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import Message from './Message';
 
 interface ChatWindowProps {
@@ -13,7 +13,7 @@ interface MessageItem {
   references?: { id: number; content: string; page_num: number }[];
 }
 
-const ChatWindow: FC<ChatWindowProps> = ({ className }) => {
+const ChatWindow: React.FC<ChatWindowProps> = ({ className }) => {
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();

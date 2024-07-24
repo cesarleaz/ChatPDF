@@ -1,18 +1,18 @@
+import type { APIRoute } from 'astro';
 import axios from 'axios';
-import { NextApiRequest, NextApiResponse } from 'next';
 import getOpenAIBaseUrl from '../../utils/getOpenAIBaseUrl';
 import { supabaseClient } from '../../utils/supabaseClient';
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const POST: APIRoute = async ({ request }) => {
   try {
-    const { query,  matches } = req.body;
+    const { query,  matches } = (await request.formData()) as any;
 
     const input = query.replace(/\n/g, ' ');
 
     const embedRes = await axios(`${getOpenAIBaseUrl()}/v1/embeddings`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+        Authorization: `Bearer ${import.meta.env.OPENAI_API_KEY}`
       },
       method: 'POST',
       data: {
@@ -34,11 +34,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return new Response('Error', { status: 500 });
     }
 
-    res.status(200).json(chunks);
+    return new Response(JSON.stringify(chunks))
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'error' });
+    return new Response(JSON.stringify({ message: 'error' }), { status: 500 })
   }
 };
-
-export default handler;

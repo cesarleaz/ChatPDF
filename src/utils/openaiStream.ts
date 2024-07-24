@@ -8,7 +8,7 @@ export const OpenAIStream = async (prompt: string) => {
   const res = await fetch(`${getOpenAIBaseUrl()}/v1/chat/completions`, {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+      Authorization: `Bearer ${import.meta.env.OPENAI_API_KEY}`
     },
     method: 'POST',
     body: JSON.stringify({
