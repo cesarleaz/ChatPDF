@@ -3,7 +3,6 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "postinstall": "patch-package",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
@@ -27,17 +26,13 @@
     "gpt-3-encoder": "^1.1.4",
     "lucide-react": "^0.414.0",
     "mitt": "^3.0.0",
-    "openai": "^3.2.1",
-    "patch-package": "^8.0.0",
-    "pdf-parse": "^1.1.1",
+    "openai": "^4.53.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",
     "react-hot-toast": "^2.4.1",
     "tailwindcss": "^3.4.6",
-    "typescript": "^5.5.3"
-  },
-  "devDependencies": {
-    "@types/pdf-parse": "^1.1.4"
+    "typescript": "^5.5.3",
+    "unpdf": "^0.11.0"
   }
 }
