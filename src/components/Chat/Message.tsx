@@ -1,30 +1,35 @@
-import { Popover } from 'antd';
-import classNames from 'classnames';
-import { useEffect, useState } from 'react';
-import eventEmitter from '../../utils/eventEmitter';
-import Loading from './Loading';
+import { Popover } from 'antd'
+import classNames from 'classnames'
+import { useEffect, useState } from 'react'
+import eventEmitter from '../../utils/eventEmitter'
+import Loading from './Loading'
 
 interface MessageProps extends React.PropsWithChildren {
-  isQuestion?: boolean;
-  loading?: boolean;
-  references?: { id: number; content: string; page_num: number }[];
-  text: string;
+  isQuestion?: boolean
+  loading?: boolean
+  references?: { id: number; content: string; page_num: number }[]
+  text?: string
 }
 
-const Message: React.FC<MessageProps> = ({ text = '', isQuestion, references = [], loading }) => {
-  const [words, setWords] = useState<string[]>([]);
+const Message: React.FC<MessageProps> = ({
+  text = '',
+  isQuestion,
+  references = [],
+  loading
+}) => {
+  const [words, setWords] = useState<string[]>([])
 
   useEffect(() => {
-    setWords(text.split(' '));
-  }, [text]);
+    setWords(text.split(' '))
+  }, [text])
 
   if (loading) {
-    return <Loading />;
+    return <Loading />
   }
 
   const onPageNumClick = (num: number) => {
-    eventEmitter.emit('scrollToPage', num);
-  };
+    eventEmitter.emit('scrollToPage', num)
+  }
 
   return (
     <div
@@ -57,19 +62,23 @@ const Message: React.FC<MessageProps> = ({ text = '', isQuestion, references = [
               <div className="w-96 h-96 overflow-auto">
                 {references.map((item, index) => (
                   <div key={index} className="pb-3">
-                    <a onClick={() => onPageNumClick(item.page_num)}>#Page {item.page_num}</a>
+                    <a onClick={() => onPageNumClick(item.page_num)}>
+                      #Page {item.page_num}
+                    </a>
                     <div className="text-xs pl-1">{item.content}</div>
                   </div>
                 ))}
               </div>
             }
           >
-            <span className="cursor-pointer text-gray-600">{references.length} References</span>
+            <span className="cursor-pointer text-gray-600">
+              {references.length} References
+            </span>
           </Popover>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Message;
+export default Message

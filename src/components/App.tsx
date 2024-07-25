@@ -2,7 +2,6 @@ import { Button, Card, type UploadProps } from 'antd';
 import { message, Upload } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import ChatWindow from '../components/chatWindow';
 import { InboxOutlined } from '@ant-design/icons';
 import eventEmitter from '../utils/eventEmitter';
 import PDFViewer from './PDFViewer';
@@ -105,17 +104,6 @@ export default function Home() {
             </p>
           </Dragger>
         )}
-      </div>
-      <div className="flex flex-row justify-center m-auto w-5/6 space-x-4 h-full overflow-hidden">
-        <ChatWindow className="flex flex-col h-full overflow-hidden" />
-
-        <Card
-          style={{ width: 700 }}
-          className="h-full overflow-auto scroll-smooth"
-          bodyStyle={{ padding: 0 }}
-        >
-          <PDFViewer src={file} />
-        </Card>
       </div>
     </main>
   );
