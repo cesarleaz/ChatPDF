@@ -1,9 +1,13 @@
-import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser';
-import getOpenAIBaseUrl from './getOpenAIBaseUrl';
+import {
+  createParser,
+  type ParsedEvent,
+  type ReconnectInterval
+} from 'eventsource-parser'
+import getOpenAIBaseUrl from './getOpenAIBaseUrl'
 
-export const OpenAIStream = async (prompt: string) => {
-  const encoder = new TextEncoder();
-  const decoder = new TextDecoder();
+export const OpenAIStream = async (prompt: string, context: string) => {
+  const encoder = new TextEncoder()
+  const decoder = new TextDecoder()
 
   const res = await fetch(`${getOpenAIBaseUrl()}/v1/chat/completions`, {
     headers: {
@@ -20,47 +24,47 @@ export const OpenAIStream = async (prompt: string) => {
         },
         {
           role: 'user',
-          content: prompt
+          content: `\nUse the following text to provide an answer to the query: "${prompt}"\n\n${context}`
         }
       ],
       temperature: 0.1,
       stream: true
     })
-  });
+  })
 
   if (res.status !== 200) {
-    throw new Error('OpenAI API returned an error');
+    throw new Error('OpenAI API returned an error' + (await res.text()))
   }
 
   const stream = new ReadableStream({
     async start(controller) {
       const onParse = (event: ParsedEvent | ReconnectInterval) => {
         if (event.type === 'event') {
-          const data = event.data;
+          const data = event.data
 
           if (data === '[DONE]') {
-            controller.close();
-            return;
+            controller.close()
+            return
           }
 
           try {
-            const json = JSON.parse(data);
-            const text = json.choices[0].delta.content;
-            const queue = encoder.encode(text);
-            controller.enqueue(queue);
+            const json = JSON.parse(data)
+            const text = json.choices[0].delta.content
+            const queue = encoder.encode(text)
+            controller.enqueue(queue)
           } catch (e) {
-            controller.error(e);
+            controller.error(e)
           }
         }
-      };
+      }
 
-      const parser = createParser(onParse);
+      const parser = createParser(onParse)
 
       for await (const chunk of res.body as any) {
-        parser.feed(decoder.decode(chunk));
+        parser.feed(decoder.decode(chunk))
       }
     }
-  });
+  })
 
-  return stream;
-};
+  return stream
+}

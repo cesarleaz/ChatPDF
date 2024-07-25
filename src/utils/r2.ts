@@ -1,14 +1,14 @@
-import { randomUUID} from 'node:crypto'
+import { randomUUID } from 'node:crypto'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 
 export const R2 = new S3Client({
-    region: 'auto',
-    endpoint: import.meta.env.R2_ENDPOINT,
-    credentials: {
-        accessKeyId: import.meta.env.R2_ACCESS_KEY_ID,
-        secretAccessKey: import.meta.env.R2_SECRET_ACCESS_KEY,
-    },
-});
+  region: 'auto',
+  endpoint: import.meta.env.R2_ENDPOINT,
+  credentials: {
+    accessKeyId: import.meta.env.R2_ACCESS_KEY_ID,
+    secretAccessKey: import.meta.env.R2_SECRET_ACCESS_KEY
+  }
+})
 
 export async function uploadToR2(unit8Array: Uint8Array) {
   const now = new Date().toISOString().slice(0, 10)
