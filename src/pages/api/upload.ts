@@ -1,26 +1,37 @@
-import type { APIRoute } from "astro";
+import type { APIRoute } from 'astro'
 import { uploadToR2 } from '../../utils/r2'
-import { generateNewChunkList } from '../../utils/splitChunks'
-import pdfParse from 'pdf-parse'
+import {
+  generateNewChunkList,
+  generateSentenceList
+} from '../../utils/splitChunks'
+import { getResolvedPDFJS } from 'unpdf'
+import { createEmbedding } from '../../utils/createEmbedding'
 
 export const POST: APIRoute = async ({ request }) => {
-    const formData = await request.formData()
-    const file = formData.get('file') as File
+  const formData = await request.formData()
+  const file = formData.get('file') as File
 
-    if (!(file instanceof File)) {
-        return new Response('No file uploaded', { status: 400 })
-    }
+  if (!(file instanceof File)) {
+    return new Response('No file uploaded', { status: 400 })
+  }
 
-    // const uploadedMetadata = await uploadToR2(file)
+  const arrayBuffer = await file.arrayBuffer()
+  const unit8Array = new Uint8Array(arrayBuffer)
 
-    const arrayBuffer = await file.arrayBuffer()
-    const buffer = Buffer.from(arrayBuffer)
+  // const uploadedMetadata = await uploadToR2(file)
 
-    const parsed = await pdfParse(buffer)
+  const { getDocument } = await getResolvedPDFJS()
+  const doc = await getDocument(unit8Array).promise
 
-    console.log(parsed)
+  console.log('Extracting text from PDF')
+  const sentenceList = await generateSentenceList(doc)
 
-    // const chunkList = generateNewChunkList(sentenceList)
+  console.log('Generating new chunk list')
+  const chunkList = generateNewChunkList(sentenceList)
 
-    return new Response(JSON.stringify({ parsed }))
+  console.log('Creating embeddings')
+  await createEmbedding(chunkList)
+
+  console.log('Done')
+  return new Response(JSON.stringify({ ok: true }))
 }

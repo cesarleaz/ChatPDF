@@ -1,4 +1,5 @@
 import { encode } from 'gpt-3-encoder';
+import type { TextItem } from 'unpdf/dist/types/src/display/api'
 
 export function generateNewChunkList(chunkList: { sentence: string; pageNum: number }[]) {
   const combined = [];
@@ -31,4 +32,25 @@ export function generateNewChunkList(chunkList: { sentence: string; pageNum: num
   });
 
   return combined;
+}
+
+export async function generateSentenceList(doc: any) {
+  const { numPages } = doc
+  const sentenceEndSymbol = /[。.]\s+/
+  const allSentenceList = []
+
+  for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+    const currentPage = await doc.getPage(pageNum)
+    const currentPageContent = await currentPage.getTextContent()
+    const currentPageText = currentPageContent.items
+      .map((item: TextItem) => item.str)
+      .join(' ')
+
+    const sentenceList = currentPageText.split(sentenceEndSymbol)
+    allSentenceList.push(
+      ...sentenceList.map((item: string) => ({ sentence: item, pageNum }))
+    )
+  }
+
+  return allSentenceList.filter((item) => item.sentence)
 }
