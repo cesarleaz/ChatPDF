@@ -1,6 +1,5 @@
-import OpenAI from 'openai'
+import { openai } from './openai'
 import { supabaseClient } from './supabaseClient'
-import getOpenAIBaseUrl from './getOpenAIBaseUrl'
 
 export async function createEmbedding(
   sentenceList: {
@@ -10,23 +9,18 @@ export async function createEmbedding(
     page_num: number
   }[]
 ) {
-  const openai = new OpenAI({
-    apiKey: import.meta.env.OPENAI_API_KEY,
-    baseURL: `${getOpenAIBaseUrl()}/v1` || undefined
-  })
-
   for (let i = 0; i < sentenceList.length; i++) {
     const chunk = sentenceList[i]
     const { content, content_length, content_tokens, page_num } = chunk
 
     if (content.length < 1 || content_length < 1) continue
 
-    const embeddingResponse = await openai.embeddings.create({
+    const embedRes = await openai.embeddings.create({
       model: 'togethercomputer/m2-bert-80M-32k-retrieval',
       input: content
     })
 
-    const [{ embedding }] = embeddingResponse.data
+    const { embedding } = embedRes.data[0]
 
     const { error } = await supabaseClient
       .from('chatgpt')
@@ -48,4 +42,21 @@ export async function createEmbedding(
     // 防止触发openai的每分钟限制
     await new Promise((resolve) => setTimeout(resolve, 1500))
   }
+}
+
+export async function getChunksEmbeddings(query: string, matches: number) {
+  const embedRes = await openai.embeddings.create({
+    model: 'togethercomputer/m2-bert-80M-32k-retrieval',
+    input: query
+  })
+
+  const { embedding } = embedRes.data[0]
+
+  const { data: chunks } = await supabaseClient.rpc('chatgpt_search', {
+    query_embedding: embedding,
+    similarity_threshold: 0.01,
+    match_count: matches
+  })
+
+  return chunks
 }
