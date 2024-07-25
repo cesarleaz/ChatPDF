@@ -10,20 +10,19 @@ export const R2 = new S3Client({
     },
 });
 
-export async function uploadToR2(file: File) {
-    const now = new Date().toISOString().slice(0, 10)
-    const id = randomUUID()
-    const key = `files/${now}/${id}`
+export async function uploadToR2(unit8Array: Uint8Array) {
+  const now = new Date().toISOString().slice(0, 10)
+  const id = randomUUID()
+  const key = `files/${now}/${id}`
 
-    const arrayBuffer = await file.arrayBuffer();
-    const unit8Array = new Uint8Array(arrayBuffer);
+  await R2.send(
+    new PutObjectCommand({
+      Bucket: import.meta.env.R2_BUCKET_NAME,
+      Key: key,
+      Body: unit8Array,
+      ContentType: 'application/pdf'
+    })
+  )
 
-    await R2.send(new PutObjectCommand({
-        Bucket: import.meta.env.R2_BUCKET_NAME,
-        Key: key,
-        Body: unit8Array,
-        ContentType: 'application/pdf'
-    }))
-    
-    return { date: now, id, fileKey: key }
+  return { date: now, id, fileKey: key }
 }

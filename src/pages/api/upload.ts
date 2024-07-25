@@ -18,7 +18,7 @@ export const POST: APIRoute = async ({ request }) => {
   const arrayBuffer = await file.arrayBuffer()
   const unit8Array = new Uint8Array(arrayBuffer)
 
-  // const uploadedMetadata = await uploadToR2(file)
+  // const uploadedMetadata = await uploadToR2(unit8Array)
 
   const { getDocument } = await getResolvedPDFJS()
   const doc = await getDocument(unit8Array).promise
