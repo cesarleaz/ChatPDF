@@ -2,7 +2,7 @@
 create extension vector;
 
 -- RUN 2nd
-create table chatgpt (
+create table pdf (
   id bigserial primary key,
   content text,
   content_length bigint,
@@ -12,7 +12,7 @@ create table chatgpt (
 );
 
 -- RUN 3rd after running the scripts
-create or replace function chatgpt_search (
+create or replace function pdf_search (
   query_embedding vector(768),
   similarity_threshold float,
   match_count int
@@ -30,20 +30,20 @@ as $$
 begin
   return query
   select
-    chatgpt.id,
-    chatgpt.content,
-    chatgpt.content_length,
-    chatgpt.content_tokens,
-    chatgpt.page_num,
-    1 - (chatgpt.embedding <=> query_embedding) as similarity
-  from chatgpt
-  where 1 - (chatgpt.embedding <=> query_embedding) > similarity_threshold
-  order by chatgpt.embedding <=> query_embedding
+    pdf.id,
+    pdf.content,
+    pdf.content_length,
+    pdf.content_tokens,
+    pdf.page_num,
+    1 - (pdf.embedding <=> query_embedding) as similarity
+  from pdf
+  where 1 - (pdf.embedding <=> query_embedding) > similarity_threshold
+  order by pdf.embedding <=> query_embedding
   limit match_count;
 end;
 $$;
 
 -- RUN 4th
-create index on chatgpt 
+create index on pdf 
 using ivfflat (embedding vector_cosine_ops)
 with (lists = 100);
